@@ -26,16 +26,26 @@ Usage
 -----
 
 Clone the project somewhere in your machine.
-bash centos_rails_installer.sh
+
+Run *centos_rails_installer.sh*
+
+With no options for the interactive mode, where it will ask on every option. If you specify options without -y or -n it will assume yes for those and ask for the others.
+
+If it's run with -y or --assume-yes it will not ask anything assuming you'll answer always yes (at least until it reaches MariaDB or Nginx scripts, I'll have to see if is there something similar for them). You can override the options you don't want by specifying them (see below)
+
+If it's run with -n or --assume-no it will do the opposite, assuming you say no to everything. Same again you can override the options you want by specifying them (see below).
+
+When run with -c or --config-only it will skip installation altoghther and go straight to Rails project creation and configuration (use with caution).
+
 
 Options
 -------
-Usage: centos_rails_installer.sh [-c|--config-only] [-y|--assume-yes] [-u|--system-update <y|n>] [-d|--delete-install-folder <y|n>] [-g|--install-git <y|n>] [-db <mariadb|postgresql>]
-  -c --config-only: skips installation and goes straight to rails configuration.
-  -y --assume-yes: assume yes to all options exept the ones specified
-  -n --assume-no: assume no to all options exept the ones specified
-  -u --system-update: performs system update at the beginning (default yes)
-  -d --delete-install-folder: remove installation folder at the end (default yes)
-  -b: install db (default yes)
-  --db-type=<mariadb|postgresql>: choose db type, assumes db install: yes. By -y default is MariaDB.
-  -g --install-git: install git (default yes)
+
+  - -c --config-only: skips installation and goes straight to rails configuration.
+  - -y --assume-yes: assume yes to all options exept the ones specified
+  - -n --assume-no: assume no to all options exept the ones specified
+  - -u --system-update: performs system update at the beginning (default yes)
+  - -d --delete-install-folder: remove installation folder at the end (default yes)
+  - -b: install db (default yes)
+  - --db-type=<mariadb|postgresql>: choose db type, assumes db install: yes. By -y default is MariaDB.
+  - -g --install-git: install git (default yes)
