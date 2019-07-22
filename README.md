@@ -27,7 +27,7 @@ Usage
 
 Clone the project somewhere in your machine.
 
-Run *centos_rails_installer.sh*
+Run **centos_rails_installer.sh**
 
 With no options for the interactive mode, where it will ask on every option. If you specify options without -y or -n it will assume yes for those and ask for the others.
 
