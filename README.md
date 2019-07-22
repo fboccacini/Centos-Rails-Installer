@@ -35,7 +35,7 @@ If it's run with -y or --assume-yes it will not ask anything assuming you'll ans
 
 If it's run with -n or --assume-no it will do the opposite, assuming you say no to everything. Same again you can override the options you want by specifying them (see below).
 
-When run with -c or --config-only it will skip installation altoghther and go straight to Rails project creation and configuration (use with caution).
+When run with -c or --config-only it will skip installation altoghether and go straight to Rails project creation and configuration (use with caution).
 
 
 Options
