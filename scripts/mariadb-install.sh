@@ -5,7 +5,8 @@ hash mysqld 2>/dev/null
 if [ $? -eq 0 ]
 then
   echo
-  echo "Mysql ($(mysqld --version)) is already installed. Skipping installation."
+  echo "Mysql ($(mysqld --version)) is already installed."
+  echo "Skipping installation."
   echo
   exit 0
 fi

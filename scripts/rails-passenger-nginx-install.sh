@@ -25,6 +25,9 @@ sudo yum -y install nodejs npm
 
 # Install gems
 gem install rails passenger
+echo
+rails -v
+echo
 
 # Compile nginx
 rvmsudo passenger-install-nginx-module

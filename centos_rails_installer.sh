@@ -25,14 +25,14 @@
 
 usage() {
   echo "Usage: $0 [-c|--config-only] [-y|--assume-yes] [-u|--system-update <y|n>] [-d|--delete-install-folder <y|n>] [-g|--install-git <y|n>] [-db <mariadb|postgresql>]" 1>&2;
-  echo "  -c --config-only: skips installation and goes straight to rails configuration."
-  echo "  -y --assume-yes: assume yes to all options exept the ones specified" 1>&2;
-  echo "  -n --assume-no: assume no to all options exept the ones specified" 1>&2;
-  echo "  -u --system-update: performs system update at the beginning (default yes)" 1>&2;
-  echo "  -d --delete-install-folder: remove installation folder at the end (default yes)" 1>&2;
-  echo "  -b: install db (default yes)" 1>&2;
-  echo "  --db-type=<mariadb|postgresql>: choose db type, assumes db install: yes. By -y default is MariaDB." 1>&2;
-  echo "  -g --install-git: install git (default yes)" 1>&2;
+  echo "  -c -config-only: skips installation and goes straight to rails configuration."
+  echo "  -y -yes: assume yes to all options exept the ones specified" 1>&2;
+  echo "  -n -no: assume no to all options exept the ones specified" 1>&2;
+  echo "  -u -update: performs system update at the beginning (default yes)" 1>&2;
+  echo "  -r -remove: remove installation folder at the end (default yes)" 1>&2;
+  echo "  -d -db: install db (default yes)" 1>&2;
+  echo "  -t -type=<mariadb|postgresql>: choose db type, assumes db install: yes. By -y default is MariaDB." 1>&2;
+  echo "  -g -git: install git (default yes)" 1>&2;
 
   exit 1;
 }
@@ -60,9 +60,13 @@ echo
 echo
 
 # Get options
-while getopts ":y:assume-yes:db:git" o; do
+while getopts "ynduct:g" o; do
     case "${o}" in
-        y|assume-yes)
+        c)
+            CONLY='y'
+            ;;
+
+        y)
             ASSUME='y'
             UPDATE='y'
             DELETE='y'
@@ -71,7 +75,8 @@ while getopts ":y:assume-yes:db:git" o; do
             CONFIG='y'
             DB_TYPE='mariadb'
             ;;
-        n|assume-no)
+
+        n)
             ASSUME='n'
             UPDATE='n'
             DELETE='n'
@@ -79,6 +84,7 @@ while getopts ":y:assume-yes:db:git" o; do
             DB='n'
             CONFIG='n'
             ;;
+
         b)
             if [[ $ASSUME = 'y' ]]
             then
@@ -87,12 +93,13 @@ while getopts ":y:assume-yes:db:git" o; do
               DB='y'
             fi
             ;;
-        db-type={mariadb|postgresql})
+
+        t={mariadb|postgresql})
             DB='y'
             DB_TYPE=${OPTARG}
             ;;
 
-        g|install-git)
+        g)
             if [[ $ASSUME = 'y' ]]
             then
               GIT='n'
@@ -101,7 +108,7 @@ while getopts ":y:assume-yes:db:git" o; do
             fi
             ;;
 
-        u|system-update)
+        u)
             if [[ $ASSUME = 'y' ]]
             then
               UPDATE='n'
@@ -110,7 +117,7 @@ while getopts ":y:assume-yes:db:git" o; do
             fi
             ;;
 
-        d|delete-install-directory)
+        d)
             if [[ $ASSUME = 'y' ]]
             then
               DELETE='n'
@@ -120,6 +127,7 @@ while getopts ":y:assume-yes:db:git" o; do
             ;;
 
         *)
+            echo "${o}"
             usage
             ;;
     esac
@@ -184,6 +192,15 @@ then
   echo
 fi
 
+# If config only option was selected go straight to configuration
+if [[ $CONLY == 'y' ]]
+then
+
+  sudo -iu $NEW_USER bash $INSTALLER_PATH/scripts/configure-rails.sh $DB_TYPE
+  echo
+  exit
+
+fi
 
 # Perform system update
 while [[ $UPDATE != "y" ]] && [[ $UPDATE != "n" ]] && [[ $UPDATE != "Y" ]] && [[ $UPDATE != "N" ]] && [[ $UPDATE != '' ]]
@@ -215,10 +232,10 @@ echo "Installing dependencies.."
 sudo yum -y install openssl openssl-devel subversion curl curl-devel gcc-c++ patch readline readline-devel zlib zlib-devel libyaml-devel libffi-devel  make bzip2 autoconf automake libtool bison sqlite-devel libxml2 libxml2-devel libxslt libxslt-devel libtool gnupg mlocate
 echo
 
-
+echo -n "Would you like to install git? [Y/n]  "
 while [[ $GIT != 'y' ]] && [[ $GIT != 'n' ]] && [[ $GIT != 'Y' ]] && [[ $GIT != 'N' ]] && [[ $GIT != '' ]]
 do
-  echo -n "Would you like to install git? [Y/n]  "
+
   read GIT
 done
 
@@ -259,7 +276,7 @@ then
     do
       echo "Which DB server would you like to install?"
       echo "    1 - MariaDB"
-      echo "    2 - Postresql"
+      echo "    2 - Postgresql"
       read CHOICE
     done
 
@@ -345,7 +362,7 @@ done
 
 if [[ $CONFIG = 'y' ]] || [[ $CONFIG = 'Y' ]] || [[ $CONFIG = '' ]]
 then
-  sudo -iu $NEW_USER bash $INSTALLER_PATH/scripts/configure-rails.sh $DB $DB_TYPE
+  sudo -iu $NEW_USER bash $INSTALLER_PATH/scripts/configure-rails.sh $DB_TYPE
   echo "Ok, all done. Have a nice developing day!"
   echo
 else
