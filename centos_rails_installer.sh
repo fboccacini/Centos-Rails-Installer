@@ -46,21 +46,8 @@ CONFIG='x'
 
 set -e
 
-echo "+-----------------------------------------------------------------+"
-echo "| Ruby-on-Rails interactive installer                             |"
-echo "|                                                                 |"
-echo "| RVM, Nginx, Passenger, bundler, MariaDB/Postgresql and git      |"
-echo "|                                                                 |"
-echo "| Please have the following informations handy:                   |"
-echo "| Project name                                                    |"
-echo "| Git account credentials, local web server user credentials,     |"
-echo "| DB user credentials                                             |"
-echo "+-----------------------------------------------------------------+"
-echo
-echo
-
 # Get options
-while getopts "ynduct:g" o; do
+while getopts "ynducgt:" o; do
     case "${o}" in
         c)
             CONLY='y'
@@ -73,7 +60,10 @@ while getopts "ynduct:g" o; do
             GIT='y'
             DB='y'
             CONFIG='y'
-            DB_TYPE='mariadb'
+            if [[ -z "DB_TYPE" ]]
+            then
+              DB_TYPE='mariadb'
+            fi
             ;;
 
         n)
@@ -94,9 +84,9 @@ while getopts "ynduct:g" o; do
             fi
             ;;
 
-        t={mariadb|postgresql})
+        t)
             DB='y'
-            DB_TYPE=${OPTARG}
+            DB_TYPE=$OPTARG
             ;;
 
         g)
@@ -133,6 +123,26 @@ while getopts "ynduct:g" o; do
     esac
 done
 shift $((OPTIND-1))
+
+if [[ "$DB_TYPE" != "mariadb" ]] && [[ "$DB_TYPE" != "postgresql" ]]
+then
+  echo "Unknown DB $DB_TYPE."
+  exit 1
+fi
+
+echo
+echo "+-----------------------------------------------------------------+"
+echo "| Ruby-on-Rails interactive installer                             |"
+echo "|                                                                 |"
+echo "| RVM, Nginx, Passenger, bundler, MariaDB/Postgresql and git      |"
+echo "|                                                                 |"
+echo "| Please have the following informations handy:                   |"
+echo "| Project name                                                    |"
+echo "| Git account credentials, local web server user credentials,     |"
+echo "| DB user credentials                                             |"
+echo "+-----------------------------------------------------------------+"
+echo
+echo
 
 # Get starting path to get back after execution
 STARTING_PATH=$(pwd)
@@ -302,13 +312,13 @@ then
   postgresql)
 
     # Install Postgresql server
-    bash $INSTALLER_PATH/scripts/postgres-install.sh
+    bash $INSTALLER_PATH/scripts/postgres-install.sh $ASSUME
     ;;
 
   mariadb)
 
     # Install MariaDB server
-    bash $INSTALLER_PATH/scripts/mariadb-install.sh
+    bash $INSTALLER_PATH/scripts/mariadb-install.sh $ASSUME
     ;;
 
   esac

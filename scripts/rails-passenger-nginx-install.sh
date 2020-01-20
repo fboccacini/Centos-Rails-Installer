@@ -1,7 +1,5 @@
 #!/bin/bash
 
-set -e
-
 CONF_PATH=$(sudo find / | grep -E "nginx\.conf$")
 if [ -n "$CONF_PATH" ]
 then
@@ -12,12 +10,14 @@ then
 
 fi
 
+set -e
+
 echo
 echo "Installing passenger, nginx and rails as $(whoami).."
 echo
 
 # Get installer path to find specific scripts
-ABS_PATH=$(cd "${0%/*}" 2>/dev/null; echo "$PWD"/"${0##*/}")
+ABS_PATH=$(cd "${0%/*}" 2>/dev/null; echo "$(pwd)"/"${0##*/}")
 INSTALLER_PATH=$(dirname $ABS_PATH)
 
 # Install dependencies
@@ -41,6 +41,6 @@ echo
 # Copy nginx service script and configure it
 sudo chmod +x $INSTALLER_PATH/nginx
 sudo cp $INSTALLER_PATH/nginx /etc/init.d
-sudo sed -i "s/\/opt\/nginx/$NGINX_PATH/g" /etc/init.d/nginx
+sudo sed -i "s|/opt/nginx|$NGINX_PATH|g" /etc/init.d/nginx
 
 sudo /sbin/chkconfig nginx on

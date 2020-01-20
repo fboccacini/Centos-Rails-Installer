@@ -377,7 +377,7 @@ configure_rails() {
 
     # Create db configuration
     mv config/database.yml config/database.yml.bkp
-    cat config/database.yml.bkp | tr "\n" "\r") > config/database.yml
+    cat config/database.yml.bkp | tr "\n" "\r" > config/database.yml
 
     sed -i "s/\(adapter:[\t ]*\).*/\1$DB_CONF/g" config/database.yml
     sed -i "s/\(development:[\t \n\r\w<\*:a-z0-9A-Z]*\r\([ \t]*\)database:[\t ]*\)[a-z\/\.0-9]*/\1$DB_DEV_DB\n\2username: <%= ENV['RAILS_DB_DEV_USER'] %>\r\2password: <%= ENV['RAILS_DB_DEV_USER'] %>/g" config/database.yml

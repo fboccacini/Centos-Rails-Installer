@@ -13,7 +13,7 @@ fi
 
 set -e
 
-PROJECT_NAME=$1
+ASSUME=$1
 
 echo "Installing DB server.."
 curl -sS https://downloads.mariadb.com/MariaDB/mariadb_repo_setup | sudo bash

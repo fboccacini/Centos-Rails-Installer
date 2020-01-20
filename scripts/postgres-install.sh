@@ -11,6 +11,8 @@ then
   exit 0
 fi
 
+ASSUME=$1
+
 set -e
 
 echo "Installing Postgresql server.."
