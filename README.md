@@ -1,5 +1,9 @@
 Centos Rails Installer
 ======================
+
+Work in progress
+----------------
+
 Rails interactive installer for CentOS Linux, with Passenger and Nginx.
 
 It drives you from a fresh installed CentOS machine to a fully configured Rails installation. Well, it works on existent machines too, but testing is work in progress.. :)

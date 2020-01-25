@@ -395,7 +395,7 @@ configure_rails() {
 
     # Create db configuration
     mv config/database.yml config/database.yml.bkp
-    cat config/database.yml.bkp | tr "\n" "\r") > config/database.yml
+    cat config/database.yml.bkp | tr "\n" "\r" > config/database.yml
 
     sed -i "s/\(adapter:[\t ]*\).*/\1$DB_CONF/g" config/database.yml
     sed -i "s/\(development:[\t \n\r\w<\*:a-z0-9A-Z]*\r\([ \t]*\)database:[\t ]*\)[a-z\/\.0-9]*/\1$DB_DEV_DB\n\2username: \'$DB_DEV_USER\'\r\2password: \'$DB_DEV_PASSWD\'/g" config/database.yml
@@ -613,8 +613,20 @@ then
   echo "Rails and Git configuration finished."
   echo
 else
+  set +e
+
   echo "Creating Rails project.."
   echo
+  ls $CODE_BASE_PATH 2>/dev/null
+  if [ $? -ne 0 ]
+  then
+    echo "Creating codebase path: $CODE_BASE_PATH"
+    sudo mkdir -p $CODE_BASE_PATH
+  fi
+  set  -e
+  sudo chgrp rvm $CODE_BASE_PATH
+  sudo chmod g+rwx $CODE_BASE_PATH
+
   cd $CODE_BASE_PATH
   rails new $PROJECT_NAME
   if [[ "$(pwd)/$PROJECT_NAME" != $PROJECT_PATH ]]
