@@ -60,3 +60,4 @@ Examples
 bash centos_rails_installer -y -t postgres -g -> assume yes: update the system, remove intallation folder, install postgres db, do not install git
 
 bash centos_rails_installer -n -b -g -> assume no: do not update the system, do not remove installation folder, install db (will ask which), install git
+
